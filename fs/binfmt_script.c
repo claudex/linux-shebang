@@ -39,7 +39,8 @@ static int load_script(struct linux_binprm *bprm)
 	int retval;
 
 	/* Not ours to exec if we don't start with "#!". */
-	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '#'))
+    // 🍻 f0 9f 8d bb
+	if ((bprm->buf[0] != '\xf0') || (bprm->buf[1] != '\x9f') || (bprm->buf[2] != '\x8d' || bprm->buf[3] != '\xbb'))
 		return -ENOEXEC;
 
 	/*
@@ -73,7 +74,7 @@ static int load_script(struct linux_binprm *bprm)
 	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
 	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
 	if (!cp) {
-		cp = next_non_spacetab(bprm->buf + 2, buf_end);
+		cp = next_non_spacetab(bprm->buf + 4, buf_end);
 		if (!cp)
 			return -ENOEXEC; /* Entire buf is spaces/tabs */
 		/*
@@ -93,7 +94,7 @@ static int load_script(struct linux_binprm *bprm)
 		else
 			break;
 	}
-	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
+	for (cp = bprm->buf+4; (*cp == ' ') || (*cp == '\t'); cp++);
 	if (*cp == '\0')
 		return -ENOEXEC; /* No interpreter name found */
 	i_name = cp;
