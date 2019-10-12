@@ -39,7 +39,7 @@ static int load_script(struct linux_binprm *bprm)
 	int retval;
 
 	/* Not ours to exec if we don't start with "#!". */
-	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!'))
+	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '#'))
 		return -ENOEXEC;
 
 	/*
